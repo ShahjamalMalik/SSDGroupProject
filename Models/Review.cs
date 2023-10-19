@@ -15,5 +15,7 @@ namespace GroupProjectDeployment.Models
         [Range(1,10)]
         [Required]
         public int StarAmount { get; set; }
+
+        public Product Product { get; set; }
     }
 }
