@@ -17,5 +17,7 @@ namespace GroupProjectDeployment.Models
         public int StarAmount { get; set; }
 
         public Product Product { get; set; }
+        
+        public Guid ProductId { get; set; }
     }
 }
