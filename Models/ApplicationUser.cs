@@ -1,0 +1,16 @@
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace GroupProjectDeployment.Models
+{
+    public class ApplicationUser:IdentityUser
+    {
+        [Display(Name="First Name")]
+        [Required]
+        public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
+        [Required]
+        public string LastName { get; set; }
+    }
+}
