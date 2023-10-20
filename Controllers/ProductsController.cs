@@ -40,8 +40,8 @@ namespace GroupProjectDeployment.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = _context.Products.Include(p => p.Reviews)
+                .FirstOrDefault(p => p.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -49,6 +49,8 @@ namespace GroupProjectDeployment.Controllers
 
             ProductReviewViewModel model = new ProductReviewViewModel();
             model.Product = product;
+            model.Product.Reviews = await _context.Reviews
+                .Where(r => product.Id.Equals(r.ProductId)).ToListAsync();
             return View(model);
         }
 

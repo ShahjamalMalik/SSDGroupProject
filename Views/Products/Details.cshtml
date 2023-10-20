@@ -1,8 +1,12 @@
 ﻿@model GroupProjectDeployment.Models.ProductReviewViewModel
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Details";
+    var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+    var username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 }
+
 <iframe id="redirect"></iframe>
 
 <h1>Details</h1>
@@ -27,13 +31,13 @@
             @Html.DisplayNameFor(model => model.Product.ImageUrl)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.ImageUrl)
+            <img src="/img/products/@Model.Product.ImageUrl" width="500" />
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Price)
+            @Html.DisplayNameFor(model => model.Product.Price) 
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Price)
+            $@Html.DisplayFor(model => model.Product.Price)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Product.quantity)
@@ -41,17 +45,14 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Product.quantity)
         </dd>
-        <dt class="col-sm-10">
-            @Html.DisplayNameFor(model => model.Product.Reviews)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Reviews)
-        </dd>
     </dl>
 
+  
 </div>
 
-<div id="review-form">
+@if (User.Identity.IsAuthenticated)
+{
+ <div id="review-form">
     <form asp-controller="Reviews" asp-action="Create" target="_self" enctype="application/x-www-form-urlencoded">
         @Html.AntiForgeryToken()
         <div class="form-group">
@@ -65,13 +66,38 @@
             <span asp-validation-for="NewReview.ReviewText" class="text-danger"></span>
         </div>
         <input type="hidden" asp-for="NewReview.ProductId" value="@Model.Product.Id" name="NewReview.ProductId" />
-        <input type="hidden" asp-for="NewReview.Email" value="test@mail.com" name="NewReview.Email" />
-        <input type="hidden" asp-for="NewReview.Username" value="fakeUser" name="NewReview.Username" />
+        <input type="hidden" asp-for="NewReview.Email" value="@email" name="NewReview.Email" />
+        <input type="hidden" asp-for="NewReview.Username" value="@username" name="NewReview.Username" />
         <div class="form-group">
             <input type="submit" class="btn btn-primary" value="Post Review" />
         </div>
     </form>
-</div>
+    </div>
+} else
+{
+    <h5>Log in to leave a review!</h5>
+}  
+<h5>Reviews</h5>
+@if(Model.Product.Reviews != null){
+    <ul>   
+    @foreach(var review in Model.Product.Reviews)
+    {
+        <li>Review from @review.Username: @review.ReviewText</li>
+        @if(review.Email == email)
+        {
+            <a asp-controller="Reviews" asp-action="Delete/@review.Id" class="btn btn-danger" >Delete Review</a>
+        }
+    }
+    
+
+    <a href="#" class="btn btn-primary">Add to cart</a>
+    </ul>
+} else
+{
+    <p>Be the first to leave a review!</p>
+}
+
+
 
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Product.Id">Edit</a> |

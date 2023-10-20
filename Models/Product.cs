@@ -25,7 +25,8 @@ public class Product
 
     [Required]
     [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive price.")]
-    [DataType(DataType.Currency)]
+    //[DataType(DataType.Currency)]
+    //[DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
     public decimal Price { get; set; }
 
 

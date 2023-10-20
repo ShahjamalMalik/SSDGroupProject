@@ -3,6 +3,33 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to the GROUP 3 STORE.</h1>
+    <p></p>
+</div>
+@model IEnumerable<GroupProjectDeployment.Models.Product>
+
+<div class="container">
+    <div class="row">
+@foreach (var product in Model)
+{
+
+        
+    <div class="card" style="width: 18rem; margin: 2rem;">
+        <a href="/Products/Details/@product.Id" class="">
+        <img class="card-img-top" src="img/products/@product.ImageUrl.ToString()" alt="Card image cap" width="250">
+        <div class="card-body">
+            <h5 class="card-title">@product.Name</h5>
+            <p class="card-text">@product.Description</p>
+            <p>Price: $@product.Price.ToString()</p>
+            <p>Quantity @product.quantity.ToString()</p>
+            <a class="btn btn-primary">Add to cart</a>
+        </div>
+        </a>
+    </div>
+       
+
+    
+}
+
+    </div>
 </div>
