@@ -47,7 +47,9 @@ namespace GroupProjectDeployment.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            ProductReviewViewModel model = new ProductReviewViewModel();
+            model.Product = product;
+            return View(model);
         }
 
         // GET: Products/Create
