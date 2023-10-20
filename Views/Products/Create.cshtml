@@ -1,0 +1,74 @@
+﻿@model GroupProjectDeployment.Models.Product
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @*in contruler IFormFile file get by enctype="multipart/form-data"*@
+        <form method="post" enctype="multipart/form-data" asp-controller="Products" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input type="file" name="file" id="file" accept=".png, .jpeg, .jpg" class="form-control" onchange="validateFileType()" />
+                <span id="fileValidation" class="text-danger" />
+                @*<input asp-for="ImageUrl" class="form-control" />*@
+                @*<span asp-validation-for="ImageUrl" class="text-danger"></span>*@
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="quantity" class="control-label"></label>
+                <input asp-for="quantity" class="form-control" />
+                <span asp-validation-for="quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+    function validateFileType() {
+        var fileName = document.getElementById("file").value;
+        var idxDot = fileName.lastIndexOf(".") + 1;
+        var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+        if (extFile == "jpg" || extFile == "jpeg" || extFile == "png") {
+            //TO DO
+        } else {
+            //alert("Only jpg/jpeg and png files are allowed!");
+            document.getElementById("file").value = ''; 
+            document.getElementById("fileValidation").textContent = 'Only jpg/jpeg and png files are allowed!';
+        }
+    }
+</script>
