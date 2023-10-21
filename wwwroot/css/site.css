@@ -16,3 +16,37 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.user-reviews, .description {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 2px solid gray;
+    border-radius: 15px;
+}
+
+.product-card {
+    text-decoration: none;
+    color: black;
+}
+
+.product-card:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.text {
+    margin-top:1rem;
+}
+
+.price, .quantity{
+    text-align: left;
+}
+
+.price {
+    margin-right:2rem;
+}
+
+.purchase-button {
+    margin: 1rem;
+}

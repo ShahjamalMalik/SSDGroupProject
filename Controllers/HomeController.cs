@@ -18,16 +18,19 @@ namespace GroupProjectDeployment.Controllers
             _context = context;
         }
 
-        /*public IActionResult Index()
-        {
-
-            return View();
-        }*/
         public async Task<IActionResult> Index()
         {
-            return _context.Products != null ?
-                        View(await _context.Products.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDbContext.Products'  is null.");
+            List<Product> products = new List<Product>();
+            products.AddRange(await _context.Products.ToListAsync());
+            foreach (var product in products)
+            {
+                if(product.Description.Length > 50)
+                {
+                    product.Description = product.Description.Substring(0, 50);
+                    product.Description += "...";
+                }
+            }
+            return View(products);
         }
 
         public IActionResult Privacy()

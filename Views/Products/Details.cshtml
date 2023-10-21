@@ -1,60 +1,32 @@
 ﻿@model GroupProjectDeployment.Models.ProductReviewViewModel
 @using System.Security.Claims
+@using GroupProjectDeployment.Models
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Product.Name;
     var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
     var username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 }
 
-<iframe id="redirect"></iframe>
 
-<h1>Details</h1>
-
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.ImageUrl)
-        </dt>
-        <dd class="col-sm-10">
-            <img src="/img/products/@Model.Product.ImageUrl" width="500" />
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Price) 
-        </dt>
-        <dd class="col-sm-10">
-            $@Html.DisplayFor(model => model.Product.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.quantity)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.quantity)
-        </dd>
-    </dl>
-
-  
+<div class="container text-center">
+    <h1>@Model.Product.Name</h1>
+    <img src="/img/products/@Model.Product.ImageUrl" width="500" />
+    <div class="text">
+        <span class="price"><b>Price:</b> @Model.Product.Price</span>
+        <span class="quantity"><b>Quantity:</b> @Model.Product.quantity</span>
+        <p class="description">@Model.Product.Description</p>
+    </div>
 </div>
+    
+<a href="#" class="btn btn-primary purchase-button">Add to cart</a>
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity != null && User.Identity.IsAuthenticated)
 {
  <div id="review-form">
     <form asp-controller="Reviews" asp-action="Create" target="_self" enctype="application/x-www-form-urlencoded">
         @Html.AntiForgeryToken()
+        <div asp-asp-validation-summary="All"></div>
         <div class="form-group">
             <label asp-for="NewReview.StarAmount" class="control-label" name="StarAmount"></label>
             <input asp-for="NewReview.StarAmount" class="form-control" />
@@ -75,26 +47,28 @@
     </div>
 } else
 {
-    <h5>Log in to leave a review!</h5>
+    <div>
+    <a href="/Identity/Account/Login">Log in to leave a review!</a>
+    </div>
 }  
 <h5>Reviews</h5>
-@if(Model.Product.Reviews != null){
-    <ul>   
-    @foreach(var review in Model.Product.Reviews)
-    {
-        <li>Review from @review.Username: @review.ReviewText</li>
-        @if(review.Email == email)
+@if(Model.Product.Reviews != null && Model.Product.Reviews.Count > 0){
+    <div class="user-reviews">
+        <ul>   
+        @foreach(var review in Model.Product.Reviews)
         {
-            <a asp-controller="Reviews" asp-action="Delete/@review.Id" class="btn btn-danger" >Delete Review</a>
+            <li>Review from @review.Username: @review.ReviewText</li>
+            @if(review.Email == email)
+            {
+                <a asp-controller="Reviews" asp-action="Delete/@review.Id" class="btn btn-danger" >Delete Review</a>
+            }
         }
-    }
-    
+        </ul>
+    </div>
 
-    <a href="#" class="btn btn-primary">Add to cart</a>
-    </ul>
 } else
 {
-    <p>Be the first to leave a review!</p>
+       <p>Be the first to leave a review!</p> 
 }
 
 

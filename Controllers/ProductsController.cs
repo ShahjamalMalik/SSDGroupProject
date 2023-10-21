@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 namespace GroupProjectDeployment.Controllers
 {
@@ -22,14 +15,6 @@ namespace GroupProjectDeployment.Controllers
         {
             _context = context;
             _environment = environment;
-        }
-
-        // GET: Products
-        public async Task<IActionResult> Index()
-        {
-              return _context.Products != null ? 
-                          View(await _context.Products.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Products'  is null.");
         }
 
         // GET: Products/Details/5
@@ -82,11 +67,10 @@ namespace GroupProjectDeployment.Controllers
                             await file.CopyToAsync(fileStream);
                         }
 
-
                         product.Id = Guid.NewGuid();
                         _context.Add(product);
                         await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
             }
             return View(product);

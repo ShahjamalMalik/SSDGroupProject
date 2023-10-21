@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<GroupProjectDeployment.Models.Product>
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,7 +7,6 @@
     <h1 class="display-4">Welcome to the GROUP 3 STORE.</h1>
     <p></p>
 </div>
-@model IEnumerable<GroupProjectDeployment.Models.Product>
 
 <div class="container">
     <div class="row">
@@ -15,7 +15,7 @@
 
         
     <div class="card" style="width: 18rem; margin: 2rem;">
-        <a href="/Products/Details/@product.Id" class="">
+        <a href="/Products/Details/@product.Id" class="product-card">
         <img class="card-img-top" src="img/products/@product.ImageUrl.ToString()" alt="Card image cap" width="250">
         <div class="card-body">
             <h5 class="card-title">@product.Name</h5>
