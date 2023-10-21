@@ -1,0 +1,79 @@
+﻿@model GroupProjectDeployment.Models.ProductReviewViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<iframe id="redirect"></iframe>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.ImageUrl)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.ImageUrl)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.quantity)
+        </dd>
+        <dt class="col-sm-10">
+            @Html.DisplayNameFor(model => model.Product.Reviews)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Reviews)
+        </dd>
+    </dl>
+
+</div>
+
+<div id="review-form">
+    <form asp-controller="Reviews" asp-action="Create" target="_self" enctype="application/x-www-form-urlencoded">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label asp-for="NewReview.StarAmount" class="control-label" name="StarAmount"></label>
+            <input asp-for="NewReview.StarAmount" class="form-control" />
+            <span asp-validation-for="NewReview.StarAmount" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NewReview.ReviewText" class="control-label" name="NewReview.ReviewText"></label>
+            <textarea asp-for="NewReview.ReviewText" class="form-control"></textarea>
+            <span asp-validation-for="NewReview.ReviewText" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="NewReview.ProductId" value="@Model.Product.Id" name="NewReview.ProductId" />
+        <input type="hidden" asp-for="NewReview.Email" value="test@mail.com" name="NewReview.Email" />
+        <input type="hidden" asp-for="NewReview.Username" value="fakeUser" name="NewReview.Username" />
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Post Review" />
+        </div>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Product.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
