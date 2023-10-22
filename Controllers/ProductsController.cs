@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupProjectDeployment.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,6 +20,7 @@ namespace GroupProjectDeployment.Controllers
         }
 
         // GET: Products/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.Products == null)
