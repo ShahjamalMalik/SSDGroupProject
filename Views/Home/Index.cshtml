@@ -1,4 +1,7 @@
-﻿@model IEnumerable<GroupProjectDeployment.Models.Product>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@model IEnumerable<GroupProjectDeployment.Models.Product>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -22,7 +25,10 @@
             <p class="card-text">@product.Description</p>
             <p>Price: $@product.Price.ToString()</p>
             <p>Quantity @product.quantity.ToString()</p>
-            <a class="btn btn-primary">Add to cart</a>
+            <form>
+                
+            </form>
+            <a asp-controller="ShoppingCarts" asp-action="AddToCart/?productId=@product.Id&userId=@User.Identity?.Name" class="btn btn-primary">Add to cart</a>
         </div>
         </a>
     </div>

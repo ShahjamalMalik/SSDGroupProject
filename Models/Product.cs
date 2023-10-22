@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GroupProjectDeployment.Models;
@@ -35,4 +36,7 @@ public class Product
 
     
     public List<Review>? Reviews { get; set;}
+
+    public List<ShoppingCart>? Cart { get; set; }
+
 }
