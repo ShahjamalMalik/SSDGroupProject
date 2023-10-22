@@ -2,6 +2,7 @@ using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GroupProjectDeployment
 {
@@ -17,14 +18,17 @@ namespace GroupProjectDeployment
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {
                 DbInitializer.Initialize(scope.ServiceProvider);
+                DbInitializer.SeedUsersAndRoles(scope.ServiceProvider).Wait();
             }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
