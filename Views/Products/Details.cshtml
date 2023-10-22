@@ -57,7 +57,8 @@
         <ul>   
         @foreach(var review in Model.Product.Reviews)
         {
-            <li>Review from @review.Username: @review.ReviewText</li>
+            <li>Review from @review.Username: @review.ReviewText
+                <br /><b>Score: @review.StarAmount / 10</b></li>
             @if(review.Email == email)
             {
                 <a asp-controller="Reviews" asp-action="Delete/@review.Id" class="btn btn-danger" >Delete Review</a>
