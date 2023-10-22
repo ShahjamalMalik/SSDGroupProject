@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupProjectDeployment.Controllers
 {
@@ -40,6 +41,7 @@ namespace GroupProjectDeployment.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -48,6 +50,7 @@ namespace GroupProjectDeployment.Controllers
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product, IFormFile file)
@@ -77,6 +80,7 @@ namespace GroupProjectDeployment.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _context.Products == null)
@@ -95,6 +99,7 @@ namespace GroupProjectDeployment.Controllers
         // POST: Products/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,ImageUrl,Price,quantity")] Product product)
@@ -128,6 +133,7 @@ namespace GroupProjectDeployment.Controllers
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Products == null)
@@ -146,6 +152,7 @@ namespace GroupProjectDeployment.Controllers
         }
 
         // POST: Products/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)

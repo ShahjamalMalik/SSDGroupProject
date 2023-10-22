@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupProjectDeployment.Controllers
 {
@@ -18,6 +19,7 @@ namespace GroupProjectDeployment.Controllers
         // POST: Reviews/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind(Prefix = "NewReview")] Review review)
@@ -34,6 +36,7 @@ namespace GroupProjectDeployment.Controllers
         }
 
         // POST: Reviews/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
