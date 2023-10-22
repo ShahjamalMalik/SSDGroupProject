@@ -33,6 +33,7 @@ namespace GroupProjectDeployment.Data
 
             modelBuilder.Entity<Product>().HasKey(p => p.Id);
             modelBuilder.Entity<Review>().HasKey(r => r.Id);
+            modelBuilder.Entity<Checkout>().HasNoKey();
 
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Reviews)
