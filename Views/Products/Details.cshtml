@@ -29,12 +29,16 @@
         <div asp-asp-validation-summary="All"></div>
         <div class="form-group">
             <label asp-for="NewReview.StarAmount" class="control-label" name="StarAmount"></label>
-            <input asp-for="NewReview.StarAmount" class="form-control" />
-            <span asp-validation-for="NewReview.StarAmount" class="text-danger"></span>
+            <select asp-for="NewReview.StarAmount" class="form-control review-select" />
+                @for (int i = 0; i <= 10; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+                <span asp-validation-for="NewReview.StarAmount" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="NewReview.ReviewText" class="control-label" name="NewReview.ReviewText"></label>
-            <textarea asp-for="NewReview.ReviewText" class="form-control"></textarea>
+            <textarea asp-for="NewReview.ReviewText" class="form-control review-text"></textarea>
             <span asp-validation-for="NewReview.ReviewText" class="text-danger"></span>
         </div>
         <input type="hidden" asp-for="NewReview.ProductId" value="@Model.Product.Id" name="NewReview.ProductId" />
@@ -57,7 +61,8 @@
         <ul>   
         @foreach(var review in Model.Product.Reviews)
         {
-            <li>Review from @review.Username: @review.ReviewText</li>
+            <li>Review from @review.Username: @review.ReviewText
+                <br /><b>Score: @review.StarAmount / 10</b></li>
             @if(review.Email == email)
             {
                 <a asp-controller="Reviews" asp-action="Delete/@review.Id" class="btn btn-danger" >Delete Review</a>
@@ -78,4 +83,8 @@
     <div>
         <a asp-action="Edit" asp-route-id="@Model?.Product.Id">Edit</a> |
     </div>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
