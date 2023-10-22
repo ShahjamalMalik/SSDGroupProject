@@ -50,3 +50,12 @@ body {
 .purchase-button {
     margin: 1rem;
 }
+
+.review-select {
+    width: 50px;
+    margin-bottom: 1rem;
+}
+
+.review-text {
+    margin-bottom: 1rem;
+}
