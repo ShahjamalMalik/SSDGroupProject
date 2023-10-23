@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace GroupProjectDeployment.Controllers
 {
-    [Authorize]
+  
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,7 +20,7 @@ namespace GroupProjectDeployment.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             List<Product> products = new List<Product>();
