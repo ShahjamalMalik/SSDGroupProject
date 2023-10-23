@@ -18,28 +18,46 @@ namespace GroupProjectDeployment.Controllers
 
         // GET: CheckoutController
         [HttpGet]
-        public IActionResult Index(Guid cartId)
+        public IActionResult Index()
         {
-            //           Guid cartId = Guid.Parse(cartIdString);
             var userName = User.Identity.Name;
             var cartItems = _context.ShoppingCart.Where(c => c.userName.Equals(userName)).ToList();
+            foreach (var cartItem in cartItems)
+            {
+                cartItem.Product = GetProduct(cartItem.ProductId);
+            }
             decimal taxAmount = 0.13M;
-            if(cartItems != null)
+            if(cartItems.Count() > 0)
             {
                 Checkout checkoutModel = new Checkout();
                 checkoutModel.CartItems = cartItems;
                 checkoutModel.TotalPrice = GetCartPrice(cartItems);
                 checkoutModel.TaxAmount = checkoutModel.TotalPrice * taxAmount;
-                checkoutModel.FinalPrice = checkoutModel.TotalPrice + checkoutModel.TaxAmount;
+                checkoutModel.FinalPrice = Math.Round(checkoutModel.TotalPrice + checkoutModel.TaxAmount, 2);
+
                 return View(checkoutModel);
             }
-            return BadRequest("cart was empty");
+            ViewBag.ErrorMessage = "There were no items in the shopping cart.";
+            return View("Error", new ErrorViewModel());
         }
 
         [HttpPost]
-        public IActionResult CompletePurchase()
+        public async Task<IActionResult> CompletePurchase()
         { //TODO: Implement complete purchaes
-            return Ok();
+            var userName = User.Identity.Name;
+            var cartItems = _context.ShoppingCart.Where(c => c.userName.Equals(userName));
+            if (cartItems != null)
+            {
+                foreach (var cartItem in cartItems)
+                {
+                    var deleteCartItem = await _context.ShoppingCart.FirstOrDefaultAsync(c => c.CartId.Equals(cartItem.CartId));
+                    _context.Remove(deleteCartItem);
+                }
+                _context.SaveChanges();
+                return Ok("Items purchased successfully.");
+            }
+            ViewBag.ErrorMessage = "There were no items in the shopping cart.";
+            return View("Error", new ErrorViewModel());
         }
 
 
@@ -51,6 +69,12 @@ namespace GroupProjectDeployment.Controllers
                 price += cartItem.Product.Price;
             }
             return price;
+        }
+
+        private Product GetProduct(Guid productId)
+        {
+            var product = _context.Products.FirstOrDefault(p => p.Id.Equals(productId));
+            return product;
         }
     }
 }

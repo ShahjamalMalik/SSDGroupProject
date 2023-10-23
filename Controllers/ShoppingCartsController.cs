@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GroupProjectDeployment.Data;
@@ -74,7 +74,7 @@ namespace GroupProjectDeployment.Controllers
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName.Equals(userName));
 
-            if (product != null && user != null)
+            if (product != null && user != null && product.quantity > 0)
             {
                 //Build the cart Item
                 var cartItem = new ShoppingCart();
@@ -82,6 +82,9 @@ namespace GroupProjectDeployment.Controllers
                 cartItem.Product = product;
                 cartItem.UserId = user.Id;
                 cartItem.userName = user.UserName;
+                user.Cart.Add(cartItem);
+
+                product.quantity--;
 
                 await _context.AddAsync(cartItem);
                 await _context.SaveChangesAsync();
@@ -89,8 +92,8 @@ namespace GroupProjectDeployment.Controllers
                 //return Ok("Item added to cart.");
                 return NoContent();
             }
-            //ModelState.AddModelError("Error", "Item did not added to cart.);
-            return Ok("Item did not added to cart.");
+
+            return Ok("Item was not added to cart.");
         }
 
 

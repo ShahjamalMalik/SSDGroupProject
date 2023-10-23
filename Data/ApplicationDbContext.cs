@@ -33,6 +33,7 @@ namespace GroupProjectDeployment.Data
 
             modelBuilder.Entity<Product>().HasKey(p => p.Id);
             modelBuilder.Entity<Review>().HasKey(r => r.Id);
+            modelBuilder.Entity<ShoppingCart>().HasKey(c => c.CartId);
             modelBuilder.Entity<Checkout>().HasNoKey();
 
             modelBuilder.Entity<Product>()
@@ -40,6 +41,10 @@ namespace GroupProjectDeployment.Data
                 .WithOne(r => r.Product)
                 .HasForeignKey(r => r.ProductId); // Assuming the foreign key property in Review is named ProductId
 
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.Cart)
+                .WithOne(c => c.Product)
+                .HasForeignKey(c => c.ProductId);
         }
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         /*protected override void OnModelCreating(ModelBuilder modelBuilder)
