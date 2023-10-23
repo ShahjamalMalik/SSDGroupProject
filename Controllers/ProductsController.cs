@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace GroupProjectDeployment.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -17,6 +18,17 @@ namespace GroupProjectDeployment.Controllers
             _context = context;
             _environment = environment;
         }
+
+
+
+        public async Task<IActionResult> Index()
+        {
+            List<Product> products = new List<Product>();
+            products.AddRange(await _context.Products.ToListAsync());
+            return View(products);
+        }
+
+
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(Guid? id)
