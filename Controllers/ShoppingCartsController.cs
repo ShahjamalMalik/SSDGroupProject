@@ -89,11 +89,11 @@ namespace GroupProjectDeployment.Controllers
                 await _context.AddAsync(cartItem);
                 await _context.SaveChangesAsync();
 
-                //return Ok("Item added to cart.");
-                return NoContent();
+                return RedirectToAction("Index", "Home");
             }
 
-            return Ok("Item was not added to cart.");
+            TempData["ErrorMessage"] = "You need to be logged in to add to a cart!";
+            return RedirectToAction("Error", "Home");
         }
 
 

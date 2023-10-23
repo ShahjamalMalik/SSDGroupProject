@@ -4,6 +4,11 @@
 @model IEnumerable<GroupProjectDeployment.Models.Product>
 @{
     ViewData["Title"] = "Home Page";
+    string disabled = "disabled";
+    if(User.Identity.IsAuthenticated)
+    {
+        disabled = "";
+    }
 }
 
 <div class="text-center">
@@ -37,7 +42,7 @@
                         @using (Html.BeginForm("AddToCart", "ShoppingCarts", 
                         new { productId = @product.Id, userName = @User.Identity?.Name }))
                         {
-                            <input type="submit" value="AddToCart" class="btn btn-primary" />
+                            <input type="submit" value="Add To Cart" class="btn btn-primary @disabled" />
                         }
 
                     </div>
