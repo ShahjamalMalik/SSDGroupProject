@@ -20,32 +20,40 @@ namespace GroupProjectDeployment.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<ShoppingCart> shoppingCarts = new List<ShoppingCart>();
-            shoppingCarts.AddRange(await _context.ShoppingCart.ToListAsync());
+            var userLoggedIn = User.Identity.IsAuthenticated;
 
-            List<ShoppingCartViewModel> cart = new List<ShoppingCartViewModel>();
-
-            foreach (var productInCart in shoppingCarts)
+            if(userLoggedIn)
             {
-                var product = await _context.Products
-                    .FirstOrDefaultAsync(m => m.Id == productInCart.ProductId);
-
-                if (User.Identity.Name == productInCart.userName) {
-                    cart.Add(new ShoppingCartViewModel()
-                    {
-                        CartId = productInCart.CartId,
-                        userId = productInCart.UserId,
-                        productId = productInCart.ProductId,
-
-                        productName = product.Name,
-                        productDescription = product.Description,
-                        ImageUrl = product.ImageUrl,
-                        Price = product.Price,
-                    });
+                List<ShoppingCart> shoppingCarts = new List<ShoppingCart>();
+                shoppingCarts.AddRange(await _context.ShoppingCart.ToListAsync());
+    
+                List<ShoppingCartViewModel> cart = new List<ShoppingCartViewModel>();
+    
+                foreach (var productInCart in shoppingCarts)
+                {
+                    var product = await _context.Products
+                        .FirstOrDefaultAsync(m => m.Id == productInCart.ProductId);
+    
+                    if (User.Identity.Name == productInCart.userName) {
+                        cart.Add(new ShoppingCartViewModel()
+                        {
+                            CartId = productInCart.CartId,
+                            userId = productInCart.UserId,
+                            productId = productInCart.ProductId,
+    
+                            productName = product.Name,
+                            productDescription = product.Description,
+                            ImageUrl = product.ImageUrl,
+                            Price = product.Price,
+                        });
+                    }
                 }
+                return View(cart);
             }
-            return View(cart);
-        }
+            
+            TempData["ErrorMessage"] = "You need to be logged in to have a cart!";
+            return RedirectToAction("Error", "Home");
+       }
 
 
         // GET: ShoppingCarts/Details/5
