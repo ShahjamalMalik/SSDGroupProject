@@ -63,3 +63,8 @@ body {
 .custom-error {
     margin-top: 2rem;
 }
+
+.cart-empty {
+    text-align: center;
+    margin-top:5rem;
+}

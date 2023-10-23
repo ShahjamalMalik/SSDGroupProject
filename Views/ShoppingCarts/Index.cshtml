@@ -3,51 +3,53 @@
 @{
     ViewData["Title"] = "Shopping Cart";
 }
+@if (Model.Count() == 1)
+{
+    <h3>Shopping Cart - @Model.Count() Item</h3>
+} else {
+    <h3>Shopping Cart - @Model.Count() Items</h3>
+}
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                product
-                @Html.DisplayNameFor(model => model.productName)
-            </th>
-            <th>
-                user
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.productName)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td> 
-                @using (Html.BeginForm("RemoveCartItem", "ShoppingCarts", 
-                        new { cartId = @item.CartId, productId = item.productId }))
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.productName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.productName)
+                    </td>
+                    <td>
+                        $@item.Price
+                    </td>
+                    <td> 
+                        @using (Html.BeginForm("RemoveCartItem", "ShoppingCarts",
+                                  new { cartId = @item.CartId, productId = item.productId }))
                         {
                             <input type="submit" value="Remove Item" class="btn btn-danger" />
                         }
 
-            </td>
-        </tr>
-}
+                    </td>
+                </tr>
+            }
 
 
-    </tbody>
-</table>
-
-@if(Model.Count() > 0)
-{
+        </tbody>
+    </table>
     <a asp-controller="Checkout" asp-action="Index" asp-route-id="@Model.ToList()[0].CartId">Go to Checkout</a>
+} else
+{
+    <h3 class="cart-empty">Your cart is empty!</h3>
 }
