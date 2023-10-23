@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GroupProjectDeployment.styles.css" asp-append-version="true" />
+
+    <script type="text/javascript">
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"].Errors.Count > 0)
+        {
+            <text>
+                $(document).ready(function () {
+                    alert('@ViewData.ModelState["Error"].Errors.First().ErrorMessage');
+                });
+            </text>
+        }
+    </script>
+
 </head>
 <body>
     <header>
@@ -41,6 +53,14 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+          @*   @if (ViewBag.Message != null)
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        alert("@ViewBag.Message");
+                    };
+                </script>
+            } *@
             @RenderBody()
         </main>
     </div>

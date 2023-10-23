@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace GroupProjectDeployment.Controllers
 {
@@ -90,20 +91,11 @@ namespace GroupProjectDeployment.Controllers
                 await _context.AddAsync(cartItem);
                 await _context.SaveChangesAsync();
 
-                return Ok("Item added to cart.");
+                //return Ok("Item added to cart.");
+                return NoContent();
             }
+            //ModelState.AddModelError("Error", "Item did not added to cart.);
             return Ok("Item did not added to cart.");
-            ////Build the cart Item
-            //var cartItem = new ShoppingCart();
-            //cartItem.Product = await _context.Products.FirstOrDefaultAsync(p => p.Id.Equals(productId));
-            //cartItem.ProductId = cartItem.Product.Id;
-            //cartItem.User = user;
-            //cartItem.UserId = cartItem.User.Id;
-
-            //await _context.AddAsync(cartItem);
-            //await _context.SaveChangesAsync();
-
-            //return Ok("Item added to cart.");
         }
 
 
