@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace GroupProjectDeployment.Controllers
 {
@@ -88,8 +89,10 @@ namespace GroupProjectDeployment.Controllers
                 await _context.AddAsync(cartItem);
                 await _context.SaveChangesAsync();
 
-                return Ok("Item added to cart.");
+                //return Ok("Item added to cart.");
+                return NoContent();
             }
+
             return Ok("Item was not added to cart.");
         }
 

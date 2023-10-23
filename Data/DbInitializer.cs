@@ -11,7 +11,7 @@ namespace GroupProjectDeployment.Data
 {
     public static class DbInitializer
     {
-
+        public static AppSecrets appSecrets { get; set; }
         public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var scope = serviceProvider.CreateScope())
@@ -184,7 +184,7 @@ namespace GroupProjectDeployment.Data
                 LastName = "Admin",
                 EmailConfirmed = true
             };
-            var result = await userManager.CreateAsync(adminUser, "Password!1");
+            var result = await userManager.CreateAsync(adminUser, appSecrets.AdminPassword);
             if (!result.Succeeded)
                 return 1;  // should log an error message here
 

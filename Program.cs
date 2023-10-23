@@ -3,6 +3,7 @@ using GroupProjectDeployment.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Configuration;
 
 namespace GroupProjectDeployment
 {
@@ -25,6 +26,15 @@ namespace GroupProjectDeployment
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+            var configuration = app.Services.GetService<IConfiguration>();
+            var hosting = app.Services.GetService<IWebHostEnvironment>();
+
+            if (hosting.IsDevelopment())
+            {
+                var secrets = configuration.GetSection("Secrets").Get<AppSecrets>();
+                DbInitializer.appSecrets = secrets;
+            }
+
             using (var scope = app.Services.CreateScope())
             {
                 DbInitializer.Initialize(scope.ServiceProvider);

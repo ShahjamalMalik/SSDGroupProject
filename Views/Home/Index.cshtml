@@ -12,6 +12,13 @@
 </div>
 
 <div class="container">
+    @if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"].Errors.Count > 0)
+    {
+        <div class="alert alert-
+       <strong>Error!</strong> danger">@ViewData.ModelState["Error"].Errors.First().ErrorMessage
+        </div>
+    }
+
     <div class="row">
         @foreach (var product in Model)
         {
