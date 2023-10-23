@@ -6,6 +6,11 @@
     ViewData["Title"] = Model.Product.Name;
     var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
     var username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+    string disabled = "disabled";
+    if(User.Identity.IsAuthenticated)
+    {
+        disabled = "";
+    }
 }
 
 
@@ -18,8 +23,12 @@
         <p class="description">@Model.Product.Description</p>
     </div>
 </div>
-    
-<a href="#" class="btn btn-primary purchase-button">Add to cart</a>
+
+@using (Html.BeginForm("AddToCart", "ShoppingCarts", 
+new { productId = @Model.Product.Id, userName = @User.Identity?.Name }))
+{
+    <input type="submit" value="Add To Cart" class="btn btn-primary @disabled" />
+}
 
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
