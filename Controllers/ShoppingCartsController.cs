@@ -27,9 +27,6 @@ namespace GroupProjectDeployment.Controllers
 
             foreach (var productInCart in shoppingCarts)
             {
-                
-
-
                 var product = await _context.Products
                     .FirstOrDefaultAsync(m => m.Id == productInCart.ProductId);
 
@@ -49,9 +46,6 @@ namespace GroupProjectDeployment.Controllers
             }
             return View(cart);
         }
-
-
-
 
 
         // GET: ShoppingCarts/Details/5
@@ -85,6 +79,7 @@ namespace GroupProjectDeployment.Controllers
                 //Build the cart Item
                 var cartItem = new ShoppingCart();
                 cartItem.ProductId = product.Id;
+                cartItem.Product = product;
                 cartItem.UserId = user.Id;
                 cartItem.userName = user.UserName;
 
@@ -156,6 +151,7 @@ namespace GroupProjectDeployment.Controllers
             }
             return BadRequest("Cart was already empty.");
         }
+
 
         private bool ShoppingCartExists(Guid id)
         {
