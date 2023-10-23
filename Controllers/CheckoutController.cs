@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using GroupProjectDeployment.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupProjectDeployment.Controllers
 {
+    [Authorize]
     public class CheckoutController : Controller
     {
 
