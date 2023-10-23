@@ -32,8 +32,13 @@
             <td>
                     @Html.DisplayFor(modelItem => item.Price)
             </td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
+            <td> 
+                @using (Html.BeginForm("RemoveCartItem", "ShoppingCarts", 
+                        new { cartId = @item.CartId, productId = item.productId }))
+                        {
+                            <input type="submit" value="Remove Item" class="btn btn-danger" />
+                        }
+
             </td>
         </tr>
 }

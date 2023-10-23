@@ -118,7 +118,7 @@ namespace GroupProjectDeployment.Controllers
 
 
         // POST: ShoppingCarts/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveCartItem(Guid cartId, Guid productId)
         {
@@ -132,7 +132,7 @@ namespace GroupProjectDeployment.Controllers
             {
                 _context.Remove(cartItem);
                 await _context.SaveChangesAsync();
-                return Ok("Item removed from cart.");
+                return RedirectToAction("Index");
             }
             return BadRequest("Could not find item in cart.");   
         }
