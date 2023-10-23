@@ -7,6 +7,11 @@ namespace GroupProjectDeployment.Models
     public class ApplicationUser : IdentityUser
     {
 
+        public ApplicationUser() 
+        {
+            Cart = new List<ShoppingCart>();
+        }    
+
         [Display(Name = "First Name")]
         [Required]
         public string FirstName { get; set; }

@@ -59,3 +59,7 @@ body {
 .review-text {
     margin-bottom: 1rem;
 }
+
+.custom-error {
+    margin-top: 2rem;
+}
