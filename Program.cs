@@ -1,5 +1,9 @@
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,13 +30,21 @@ namespace GroupProjectDeployment
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+
             var configuration = app.Services.GetService<IConfiguration>();
             var hosting = app.Services.GetService<IWebHostEnvironment>();
 
-            if (hosting.IsDevelopment())
+            try
             {
-                var secrets = configuration.GetSection("Secrets").Get<AppSecrets>();
-                DbInitializer.appSecrets = secrets;
+                var credential = new DefaultAzureCredential();
+                var token = credential.GetToken(new Azure.Core.TokenRequestContext(new[] { "https://groupprojectdeploymentva.vault.azure.net/" }));
+
+                Console.WriteLine($"Authentication successful. Access token: {token.Token}");
+            }
+            catch (Azure.Identity.AuthenticationFailedException ex)
+            {
+                Console.WriteLine($"Authentication failed. Error message: {ex.Message}");
             }
 
             using (var scope = app.Services.CreateScope())
@@ -67,5 +79,18 @@ namespace GroupProjectDeployment
 
             app.Run();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureLogging(logging =>
+        {
+            logging.ClearProviders(); // Clears any default logging providers
+            logging.AddConsole(); // Adds the console logger
+            logging.SetMinimumLevel(LogLevel.Debug); // Sets the minimum log level
+        })
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Program>();
+        });
     }
 }

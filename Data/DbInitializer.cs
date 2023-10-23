@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GroupProjectDeployment.Models;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Core;
+using Azure.Identity;
 
 namespace GroupProjectDeployment.Data
 {
@@ -184,9 +187,24 @@ namespace GroupProjectDeployment.Data
                 LastName = "Admin",
                 EmailConfirmed = true
             };
-            var result = await userManager.CreateAsync(adminUser, appSecrets.AdminPassword);
-            if (!result.Succeeded)
-                return 1;  // should log an error message here
+            SecretClientOptions options = new SecretClientOptions()
+            {
+                Retry =
+        {
+            Delay= TimeSpan.FromSeconds(2),
+            MaxDelay = TimeSpan.FromSeconds(16),
+            MaxRetries = 5,
+            Mode = RetryMode.Exponential
+         }
+            };
+            var client = new SecretClient(new Uri("https://groupprojectdeploymentva.vault.azure.net/"), new DefaultAzureCredential(), options);
+
+            KeyVaultSecret secret = client.GetSecret("AdminPassword");
+
+            string secretValue = secret.Value;
+
+
+            var result = await userManager.CreateAsync(adminUser, secretValue);
 
             // Assign user to Manager role
             result = await userManager.AddToRoleAsync(adminUser, "Admin");

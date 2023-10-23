@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/SSD-Group-3-2023/providers/Microsoft.ServiceLinker/linkers/VaultUri_C45FD3FB9C",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/GroupProjectDeploymentva",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUri"
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/SSD-Group-3-2023/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsDefaultConnection_28F7DCA236",
+      "secretStore": "AzureKeyVault",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/group3webstoredbserver/databases/Group3Webstore_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DefaultConnection"
+    }
+  }
+}
