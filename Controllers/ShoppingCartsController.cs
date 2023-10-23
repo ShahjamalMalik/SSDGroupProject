@@ -15,6 +15,44 @@ namespace GroupProjectDeployment.Controllers
             _context = context;
         }
 
+
+
+        public async Task<IActionResult> Index()
+        {
+            List<ShoppingCart> shoppingCarts = new List<ShoppingCart>();
+            shoppingCarts.AddRange(await _context.ShoppingCart.ToListAsync());
+
+            List<ShoppingCartViewModel> cart = new List<ShoppingCartViewModel>();
+
+            foreach (var productInCart in shoppingCarts)
+            {
+                
+
+
+                var product = await _context.Products
+                    .FirstOrDefaultAsync(m => m.Id == productInCart.ProductId);
+
+                if (User.Identity.Name == productInCart.userName) {
+                    cart.Add(new ShoppingCartViewModel()
+                    {
+                        CartId = productInCart.CartId,
+                        userId = productInCart.UserId,
+                        productId = productInCart.ProductId,
+
+                        productName = product.Name,
+                        productDescription = product.Description,
+                        ImageUrl = product.ImageUrl,
+                        Price = product.Price,
+                    });
+                }
+            }
+            return View(cart);
+        }
+
+
+
+
+
         // GET: ShoppingCarts/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -34,24 +72,41 @@ namespace GroupProjectDeployment.Controllers
             return View(shoppingCart);
         }
 
-        [HttpPost]
+
+
         public async Task<IActionResult> AddToCart(Guid productId, string userName)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName.Equals(userName));
 
-            //Build the cart Item
-            var cartItem = new ShoppingCart();
-            cartItem.Product = await _context.Products.FirstOrDefaultAsync(p => p.Id.Equals(productId));
-            cartItem.ProductId = cartItem.Product.Id;
-            cartItem.User = user;
-            cartItem.UserId = cartItem.User.Id;
+            if (product != null && user != null)
+            {
+                //Build the cart Item
+                var cartItem = new ShoppingCart();
+                cartItem.ProductId = product.Id;
+                cartItem.UserId = user.Id;
+                cartItem.userName = user.UserName;
 
-            await _context.AddAsync(cartItem);
-            await _context.SaveChangesAsync();
+                await _context.AddAsync(cartItem);
+                await _context.SaveChangesAsync();
 
-            return Ok("Item added to cart.");
+                return Ok("Item added to cart.");
+            }
+            return Ok("Item did not added to cart.");
+            ////Build the cart Item
+            //var cartItem = new ShoppingCart();
+            //cartItem.Product = await _context.Products.FirstOrDefaultAsync(p => p.Id.Equals(productId));
+            //cartItem.ProductId = cartItem.Product.Id;
+            //cartItem.User = user;
+            //cartItem.UserId = cartItem.User.Id;
+
+            //await _context.AddAsync(cartItem);
+            //await _context.SaveChangesAsync();
+
+            //return Ok("Item added to cart.");
         }
+
+
 
         // POST: ShoppingCarts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

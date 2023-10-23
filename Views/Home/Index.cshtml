@@ -13,29 +13,33 @@
 
 <div class="container">
     <div class="row">
-@foreach (var product in Model)
-{
+        @foreach (var product in Model)
+        {
 
-        
-    <div class="card" style="width: 18rem; margin: 2rem;">
-        <a href="/Products/Details/@product.Id" class="product-card">
-        <img class="card-img-top" src="img/products/@product.ImageUrl.ToString()" alt="Card image cap" width="250">
-        <div class="card-body">
-            <h5 class="card-title">@product.Name</h5>
-            <p class="card-text">@product.Description</p>
-            <p>Price: $@product.Price.ToString()</p>
-            <p>Quantity @product.quantity.ToString()</p>
-            <form>
-                
-            </form>
-            <a asp-controller="ShoppingCarts" asp-action="AddToCart/?productId=@product.Id&userId=@User.Identity?.Name" class="btn btn-primary">Add to cart</a>
-        </div>
-        </a>
-    </div>
-       
 
-    
-}
+            <div class="card" style="width: 18rem; margin: 2rem;">
+                <a href="/Products/Details/@product.Id" class="product-card">
+                    <img class="card-img-top" src="img/products/@product.ImageUrl.ToString()" alt="Card image cap" width="250">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description</p>
+                        <p>Price: $@product.Price.ToString()</p>
+                        <p>Quantity @product.quantity.ToString()</p>
+
+
+                        @using (Html.BeginForm("AddToCart", "ShoppingCarts", 
+                        new { productId = @product.Id, userName = @User.Identity?.Name }))
+                        {
+                            <input type="submit" value="AddToCart" class="btn btn-primary" />
+                        }
+
+                    </div>
+                </a>
+            </div>
+
+
+
+        }
 
     </div>
 </div>
