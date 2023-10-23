@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using GroupProjectDeployment.Data;
 using GroupProjectDeployment.Models;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupProjectDeployment.Controllers
 {
+    [Authorize]
     public class ShoppingCartsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -17,7 +19,7 @@ namespace GroupProjectDeployment.Controllers
         }
 
 
-
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var userLoggedIn = User.Identity.IsAuthenticated;
@@ -105,27 +107,6 @@ namespace GroupProjectDeployment.Controllers
         }
 
 
-
-        // POST: ShoppingCarts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CartId,UserId")] ShoppingCart shoppingCart)
-        {
-            if (ModelState.IsValid)
-            {
-                shoppingCart.CartId = Guid.NewGuid();
-                _context.Add(shoppingCart);
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.UserId);
-            return BadRequest();
-        }
-
-
-        // POST: ShoppingCarts/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveCartItem(Guid cartId, Guid productId)
@@ -152,30 +133,6 @@ namespace GroupProjectDeployment.Controllers
 
             TempData["ErrorMessage"] = "Could not find item to remove in cart.";
             return RedirectToAction("Error", "Home");
-        }
-
-        public async Task<IActionResult> EmptyCart(Guid cartId)
-        {
-            if (_context.ShoppingCart == null)
-            {
-                return Problem("Shopping Cart is null");
-            }
-            //Get shopping cart by cart id
-            var shoppingCart = await _context.ShoppingCart
-                .FirstOrDefaultAsync(c => c.CartId.Equals(cartId));
-            if(shoppingCart != null)
-            {
-                shoppingCart = new ShoppingCart(); //reset shopping cart
-                await _context.SaveChangesAsync();
-                return Ok("Cart successfully deleted.");
-            }
-            return BadRequest("Cart was already empty.");
-        }
-
-
-        private bool ShoppingCartExists(Guid id)
-        {
-          return (_context.ShoppingCart?.Any(e => e.CartId == id)).GetValueOrDefault();
         }
     }
 }
