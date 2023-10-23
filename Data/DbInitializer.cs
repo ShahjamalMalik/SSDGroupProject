@@ -11,7 +11,7 @@ namespace GroupProjectDeployment.Data
 {
     public static class DbInitializer
     {
-
+        public static AppSecrets appSecrets { get; set; }
         public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var scope = serviceProvider.CreateScope())
