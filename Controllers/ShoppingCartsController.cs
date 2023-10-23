@@ -126,15 +126,24 @@ namespace GroupProjectDeployment.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.ShoppingCart'  is null.");
             }
+
             var cartItem = await _context.ShoppingCart
                 .FirstOrDefaultAsync(c => c.ProductId == productId && c.CartId == cartId);
+
             if (cartItem != null)
             {
                 _context.Remove(cartItem);
+
+                //increase product quantity
+                var product = await _context.Products.FirstOrDefaultAsync(p => p.Id.Equals(cartItem.ProductId));
+                product.quantity++;
+                _context.Update(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return BadRequest("Could not find item in cart.");   
+
+            TempData["ErrorMessage"] = "Could not find item to remove in cart.";
+            return RedirectToAction("Error", "Home");
         }
 
         public async Task<IActionResult> EmptyCart(Guid cartId)
