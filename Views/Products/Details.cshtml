@@ -72,9 +72,14 @@ new { productId = @Model.Product.Id, userName = @User.Identity?.Name }))
         {
             <li>Review from @review.Username: @review.ReviewText
                 <br /><b>Score: @review.StarAmount / 10</b></li>
-            @if(review.Email == email)
-            {
-                <a asp-controller="Reviews" asp-action="Delete/@review.Id" class="btn btn-danger" >Delete Review</a>
+            @if(review.Email == email || User.IsInRole("Admin"))
+            {  
+                @using (Html.BeginForm("Remove", "Reviews",
+                 new { id = review.Id }))
+                 {
+                     <input type="submit" value="Delete Review" class="btn btn-primary" />
+                 }
+
             }
         }
         </ul>
