@@ -32,13 +32,33 @@ namespace GroupProjectDeployment.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Product>().HasKey(p => p.Id);
-
             modelBuilder.Entity<Review>().HasKey(r => r.Id);
+            modelBuilder.Entity<ShoppingCart>().HasKey(c => c.CartId);
+            modelBuilder.Entity<Checkout>().HasNoKey();
 
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Reviews)
                 .WithOne(r => r.Product)
                 .HasForeignKey(r => r.ProductId); // Assuming the foreign key property in Review is named ProductId
+
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.Cart)
+                .WithOne(c => c.Product)
+                .HasForeignKey(c => c.ProductId);
         }
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product>().HasKey(p => p.Id);
+
+            modelBuilder.Entity<Review>().HasKey(r => r.Id);
+
+            modelBuilder.Entity<Product>()
+            .HasMany(p => p.Reviews)
+            .WithOne(r => r.Product);
+
+            modelBuilder.Entity<ApplicationUser>().HasKey(p => p.Id);
+        }*/
+        public DbSet<GroupProjectDeployment.Models.ShoppingCart>? ShoppingCart { get; set; }
     }
 }

@@ -50,3 +50,21 @@ body {
 .purchase-button {
     margin: 1rem;
 }
+
+.review-select {
+    width: 50px;
+    margin-bottom: 1rem;
+}
+
+.review-text {
+    margin-bottom: 1rem;
+}
+
+.custom-error {
+    margin-top: 2rem;
+}
+
+.cart-empty {
+    text-align: center;
+    margin-top:5rem;
+}

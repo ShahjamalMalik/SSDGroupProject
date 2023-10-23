@@ -1,0 +1,18 @@
+﻿@model GroupProjectDeployment.Models.Checkout;
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2>Payment Details</h2>
+
+<h5>Price: @Model.FinalPrice</h5>
+<h5>Please use your student number instead of credit cart.</h5>
+<form method="post" asp-asp-controller="Checkout" asp-action="CompletePurchase" target="_self" enctype="application/x-www-form-urlencoded">
+    <div class="form-group">
+        <label asp-for="@Model.StudentNumber" name="StudentNumber"></label>
+        <input asp-for="@Model.StudentNumber" type="text" name="StudentNumber" placeholder="Student Number" required>
+        <span asp-validation-for="@Model.StudentNumber" name="StudentNumber" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="@Model.TotalPrice" name="TotalPrice" />
+    <button type="submit">Complete Purchase</button>
+</form>

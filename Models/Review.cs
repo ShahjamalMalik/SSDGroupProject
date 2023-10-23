@@ -12,6 +12,8 @@ namespace GroupProjectDeployment.Models
         [StringLength(250, MinimumLength = 1)]
         [Required]
         public string ReviewText { get; set; }
+
+        [Display(Name = "Review Score")]
         [Range(1,10)]
         [Required]
         public int StarAmount { get; set; }

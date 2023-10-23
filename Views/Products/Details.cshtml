@@ -6,6 +6,11 @@
     ViewData["Title"] = Model.Product.Name;
     var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
     var username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+    string disabled = "disabled";
+    if(User.Identity.IsAuthenticated)
+    {
+        disabled = "";
+    }
 }
 
 
@@ -18,8 +23,12 @@
         <p class="description">@Model.Product.Description</p>
     </div>
 </div>
-    
-<a href="#" class="btn btn-primary purchase-button">Add to cart</a>
+
+@using (Html.BeginForm("AddToCart", "ShoppingCarts", 
+new { productId = @Model.Product.Id, userName = @User.Identity?.Name }))
+{
+    <input type="submit" value="Add To Cart" class="btn btn-primary @disabled" />
+}
 
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
@@ -29,12 +38,16 @@
         <div asp-asp-validation-summary="All"></div>
         <div class="form-group">
             <label asp-for="NewReview.StarAmount" class="control-label" name="StarAmount"></label>
-            <input asp-for="NewReview.StarAmount" class="form-control" />
-            <span asp-validation-for="NewReview.StarAmount" class="text-danger"></span>
+            <select asp-for="NewReview.StarAmount" class="form-control review-select" />
+                @for (int i = 0; i <= 10; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+                <span asp-validation-for="NewReview.StarAmount" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="NewReview.ReviewText" class="control-label" name="NewReview.ReviewText"></label>
-            <textarea asp-for="NewReview.ReviewText" class="form-control"></textarea>
+            <textarea asp-for="NewReview.ReviewText" class="form-control review-text"></textarea>
             <span asp-validation-for="NewReview.ReviewText" class="text-danger"></span>
         </div>
         <input type="hidden" asp-for="NewReview.ProductId" value="@Model.Product.Id" name="NewReview.ProductId" />
@@ -57,10 +70,16 @@
         <ul>   
         @foreach(var review in Model.Product.Reviews)
         {
-            <li>Review from @review.Username: @review.ReviewText</li>
-            @if(review.Email == email)
-            {
-                <a asp-controller="Reviews" asp-action="Delete/@review.Id" class="btn btn-danger" >Delete Review</a>
+            <li>Review from @review.Username: @review.ReviewText
+                <br /><b>Score: @review.StarAmount / 10</b></li>
+            @if(review.Email == email || User.IsInRole("Admin"))
+            {  
+                @using (Html.BeginForm("Remove", "Reviews",
+                 new { id = review.Id }))
+                 {
+                     <input type="submit" value="Delete Review" class="btn btn-primary" />
+                 }
+
             }
         }
         </ul>
@@ -78,4 +97,8 @@
     <div>
         <a asp-action="Edit" asp-route-id="@Model?.Product.Id">Edit</a> |
     </div>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

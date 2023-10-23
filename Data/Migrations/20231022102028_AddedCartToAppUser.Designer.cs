@@ -4,6 +4,7 @@ using GroupProjectDeployment.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupProjectDeployment.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231022102028_AddedCartToAppUser")]
+    partial class AddedCartToAppUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,27 +23,6 @@ namespace GroupProjectDeployment.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("GroupProjectDeployment.Models.Checkout", b =>
-                {
-                    b.Property<decimal>("FinalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentNumber")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TaxAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.ToTable("Checkout");
-                });
 
             modelBuilder.Entity("GroupProjectDeployment.Models.Product", b =>
                 {
@@ -65,10 +46,15 @@ namespace GroupProjectDeployment.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid?>("ShoppingCartCartId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("quantity")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ShoppingCartCartId");
 
                     b.ToTable("Products");
                 });
@@ -111,22 +97,14 @@ namespace GroupProjectDeployment.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("userName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("CartId");
 
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("ShoppingCart");
                 });
@@ -282,10 +260,12 @@ namespace GroupProjectDeployment.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -322,10 +302,12 @@ namespace GroupProjectDeployment.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -350,6 +332,13 @@ namespace GroupProjectDeployment.Data.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("GroupProjectDeployment.Models.Product", b =>
+                {
+                    b.HasOne("GroupProjectDeployment.Models.ShoppingCart", null)
+                        .WithMany("Cart")
+                        .HasForeignKey("ShoppingCartCartId");
+                });
+
             modelBuilder.Entity("GroupProjectDeployment.Models.Review", b =>
                 {
                     b.HasOne("GroupProjectDeployment.Models.Product", "Product")
@@ -363,19 +352,11 @@ namespace GroupProjectDeployment.Data.Migrations
 
             modelBuilder.Entity("GroupProjectDeployment.Models.ShoppingCart", b =>
                 {
-                    b.HasOne("GroupProjectDeployment.Models.Product", "Product")
-                        .WithMany("Cart")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GroupProjectDeployment.Models.ApplicationUser", "User")
-                        .WithMany("Cart")
-                        .HasForeignKey("UserId")
+                        .WithOne("Cart")
+                        .HasForeignKey("GroupProjectDeployment.Models.ShoppingCart", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
 
                     b.Navigation("User");
                 });
@@ -433,14 +414,18 @@ namespace GroupProjectDeployment.Data.Migrations
 
             modelBuilder.Entity("GroupProjectDeployment.Models.Product", b =>
                 {
-                    b.Navigation("Cart");
-
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("GroupProjectDeployment.Models.ShoppingCart", b =>
+                {
+                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("GroupProjectDeployment.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Cart");
+                    b.Navigation("Cart")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
