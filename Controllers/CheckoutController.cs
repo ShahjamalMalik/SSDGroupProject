@@ -50,11 +50,7 @@ namespace GroupProjectDeployment.Controllers
             var cartItems = _context.ShoppingCart.Where(c => c.userName.Equals(userName));
             if (cartItems != null)
             {
-                foreach (var cartItem in cartItems)
-                {
-                    var deleteCartItem = await _context.ShoppingCart.FirstOrDefaultAsync(c => c.CartId.Equals(cartItem.CartId));
-                    _context.Remove(deleteCartItem);
-                }
+                _context.RemoveRange(cartItems);
                 _context.SaveChanges();
                 return Ok("Items purchased successfully.");
             }
